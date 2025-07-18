@@ -98,7 +98,13 @@ export default function GalleryPage() {
       setPhotos([])
       setCurrentPage(1)
       setTotalPages(1)
-      setError('加载照片数据失败')
+      // 只有在网络错误或服务器错误时才显示错误信息
+      // 如果是404或数据为空，则不显示错误
+      if (err instanceof Error && !err.message.includes('404')) {
+        setError('加载照片数据失败，请稍后重试')
+      } else {
+        setError(null)
+      }
     } finally {
       setLoading(false)
     }
@@ -260,8 +266,18 @@ export default function GalleryPage() {
 
         {/* 照片列表 */}
         {!loading && !error && (
-          <div className="grid gap-6">
-            {photos.map((post) => (
+          <>
+            {photos.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-16 text-center">
+                <Camera className="h-16 w-16 text-muted-foreground/50 mb-4" />
+                <h3 className="text-xl font-semibold text-muted-foreground mb-2">暂无照片</h3>
+                <p className="text-muted-foreground max-w-md">
+                  还没有上传任何照片，快来分享你的精彩瞬间吧！
+                </p>
+              </div>
+            ) : (
+              <div className="grid gap-6">
+                {photos.map((post) => (
             <Card key={post.id} className="hover:shadow-lg hover:border-primary/20 transition-all duration-300">
               <CardHeader>
                 <div className="flex items-start justify-between">
@@ -435,8 +451,10 @@ export default function GalleryPage() {
                 </div>
               </CardContent>
             </Card>
-            ))}
-          </div>
+                ))}
+              </div>
+            )}
+          </>
         )}
 
         {/* 分页组件 */}

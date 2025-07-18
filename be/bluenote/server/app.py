@@ -2,6 +2,7 @@ from contextlib import asynccontextmanager
 import aiohttp
 import os
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi_cdn_host import monkey_patch_for_docs_ui
 
 from bluenote.api import exceptions, middlewares
@@ -72,6 +73,16 @@ def create_app() -> FastAPI:
     )
     
     monkey_patch_for_docs_ui(app)
+    
+    # 添加CORS中间件
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],  # 允许所有源（开发环境）
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+    
     app.add_middleware(middlewares.RequestTimeMiddleware)
     
     app.include_router(api_router)
