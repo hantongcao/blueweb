@@ -17,7 +17,7 @@ class Settings:
     LOG_BACKUP_COUNT: int = 5
     
     # 数据库配置
-    DATABASE_URL: str = "postgresql://blog_user:blog_password@localhost:5432/blog_db"
+    DATABASE_URL: str = "postgresql://blue_web:blue_password@localhost:5432/blueweb"
 
     # 初始管理员账号密码
     INIT_ADMIN_USERNAME: str = "admin"
